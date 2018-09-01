@@ -2,6 +2,8 @@ package com.amoharib.bakingapp.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import com.amoharib.bakingapp.R;
 import com.amoharib.bakingapp.model.Step;
 import com.amoharib.bakingapp.util.ClickCallBack;
 import com.amoharib.bakingapp.util.NetworkUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -48,14 +52,6 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.VH> {
     public void onBindViewHolder(@NonNull VH holder, final int position) {
         final Step step = steps.get(position);
         holder.stepDetailsTv.setText(step.getShortDescription());
-
-        try {
-            Bitmap thumbnail = NetworkUtils.retriveVideoFrameFromVideo(step.getVideoURL());
-            //thumbnail = Bitmap.createScaledBitmap(thumbnail, 150, 100, false);
-            holder.stepThumbnail.setImageBitmap(thumbnail);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
 
         holder.playBtn.setOnClickListener(new View.OnClickListener() {
             @Override

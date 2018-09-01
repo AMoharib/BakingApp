@@ -12,9 +12,13 @@ import com.amoharib.bakingapp.R;
 import com.amoharib.bakingapp.fragments.DetailsFragment;
 import com.amoharib.bakingapp.fragments.VideoFragment;
 import com.amoharib.bakingapp.model.Result;
+import com.amoharib.bakingapp.model.Step;
 import com.amoharib.bakingapp.util.Constants;
 import com.amoharib.bakingapp.widget.RecipeWidget;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -25,11 +29,21 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         stepsJson = getIntent().getStringExtra(Constants.KEY_STEPS);
         ingredientJson = getIntent().getStringExtra(Constants.KEY_INGREDIENTS);
 
         if (MainActivity.isTab) {
-            getSupportFragmentManager().beginTransaction().add(R.id.video_fragment_container, new VideoFragment()).commit();
+            Bundle bundle = new Bundle();
+            List<Step> steps = new Gson().fromJson(stepsJson, new TypeToken<List<Step>>() {
+            }.getType());
+            bundle.putString(Constants.KEY_STEPS_URL, steps.get(0).getVideoURL());
+            bundle.putString(Constants.KEY_STEPS_DESC, steps.get(0).getDescription());
+            VideoFragment videoFragment = new VideoFragment();
+            videoFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().add(R.id.video_fragment_container, videoFragment).commit();
         }
 
         if (savedInstanceState == null) {
@@ -64,6 +78,10 @@ public class DetailsActivity extends AppCompatActivity {
         switch (id) {
             case R.id.add_to_widget:
                 addToWidget();
+                break;
+            case android.R.id.home:
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

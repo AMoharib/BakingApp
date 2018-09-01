@@ -83,7 +83,6 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
             position = savedInstanceState.getLong(Constants.MEDIA_POS);
 
         }
-
         initializeMedia();
         initializePlayer(Uri.parse(url));
         checkOrientation();
@@ -182,12 +181,6 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
             player.setPlayWhenReady(isReady);
             player.seekTo(position);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        releasePlayer();
     }
 
     @Override
